@@ -1,234 +1,41 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
- 
-<title>Dashboard Financeiro</title>
- 
-https://cdn.jsdelivr.net/npm/chart.jsscript>
- 
-<style>
-:root{
---green:#10b981;
---red:#ef4444;
---blue:#3b82f6;
---dark:#111827;
---gray:#6b7280;
---bg:#f4f7fc;
-}
- 
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:'Segoe UI',sans-serif;
-}
- 
-body{
-background:var(--bg);
-padding:25px;
-}
- 
-.container{
-max-width:1400px;
-margin:auto;
-}
- 
-h1{
-color:var(--dark);
-margin-bottom:20px;
-}
- 
-.cards{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
-gap:20px;
-margin-bottom:30px;
-}
- 
-.card{
-background:#fff;
-border-radius:18px;
-padding:22px;
-box-shadow:0 8px 25px rgba(0,0,0,.08);
-}
- 
-.card h3{
-color:var(--gray);
-font-size:14px;
-margin-bottom:10px;
-}
- 
-.card .value{
-font-size:30px;
-font-weight:700;
-}
- 
-.green{
-color:var(--green);
-}
- 
-.red{
-color:var(--red);
-}
- 
-.blue{
-color:var(--blue);
-}
- 
-.chart-container{
-background:white;
-border-radius:18px;
-padding:20px;
-margin-bottom:25px;
-box-shadow:0 8px 25px rgba(0,0,0,.08);
-}
- 
-canvas{
-max-height:400px;
-}
-</style>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Financeiro</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
 </head>
-<body>
- 
-<div class="container">
- 
-<h1>📊 Dashboard Financeiro</h1>
- 
-<div class="cards">
- 
-<div class="card">
-<h3>Total de Entradas</h3>
-<div class="value green">R$ 1.995,97</div>
+<body class="bg-[#f5f7fb] font-sans p-6">
+<div class="max-w-6xl mx-auto">
+<h1 class="text-3xl font-bold mb-1">Financeiro</h1>
+<p class="text-gray-500 mb-6">Seu controle com F maiúsculo 💜</p>
+
+<div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+<div class="bg-white p-5 rounded-2xl shadow-sm border"><p class="text-sm text-gray-500"><i class="fa-solid fa-arrow-up text-emerald-500 mr-1"></i> Total Entradas</p><h2 class="text-2xl font-bold">R$ 1.995,97</h2></div>
+<div class="bg-white p-5 rounded-2xl shadow-sm border"><p class="text-sm text-gray-500"><i class="fa-solid fa-arrow-down text-rose-500 mr-1"></i> Total Saídas</p><h2 class="text-2xl font-bold">R$ 1.227,77</h2></div>
+<div class="bg-indigo-600 text-white p-5 rounded-2xl shadow"><p class="text-sm opacity-80">Saldo Acumulado</p><h2 class="text-2xl font-bold">R$ 768,20</h2></div>
+<div class="bg-white p-5 rounded-2xl shadow-sm border"><p class="text-sm text-gray-500">Taxa Economia</p><h2 class="text-2xl font-bold text-emerald-600">38,49%</h2><p class="text-xs text-gray-400">Média gastos R$ 409,26</p></div>
 </div>
- 
-<div class="card">
-<h3>Total de Saídas</h3>
-<div class="value red">R$ 1.227,77</div>
+
+<div class="bg-white p-6 rounded-2xl shadow-sm border">
+<h3 class="font-bold mb-4">Entradas x Saídas Mensais</h3>
+<canvas id="grafico"></canvas>
 </div>
- 
-<div class="card">
-<h3>Saldo Acumulado</h3>
-<div class="value blue">R$ 768,20</div>
 </div>
- 
-<div class="card">
-<h3>Média de Gastos</h3>
-<div class="value">R$ 409,26</div>
-</div>
- 
-<div class="card">
-<h3>Taxa de Economia</h3>
-<div class="value green">38,49%</div>
-</div>
- 
-</div>
- 
-<div class="chart-container">
-<h2>Entradas x Saídas Mensais</h2>
-<canvas id="fluxoMensal"></canvas>
-</div>
- 
-<div class="chart-container">
-<h2>Evolução dos Saldos</h2>
-<canvas id="saldoMensal"></canvas>
-</div>
- 
-<div class="chart-container">
-<h2>Taxa de Economia</h2>
-<canvas id="economia"></canvas>
-</div>
- 
-</div>
- 
 <script>
- 
-const meses = ["Abril","Maio","Setembro"];
- 
-const entradas = [
-609.48,
-635.49,
-751.00
-];
- 
-const saidas = [
-652.66,
-231.36,
-343.75
-];
- 
-const saldo = [
--43.18,
-404.13,
-407.25
-];
- 
-new Chart(
-document.getElementById("fluxoMensal"),
-{
-type:"bar",
+new Chart(document.getElementById('grafico'),{
+type:'bar',
 data:{
-labels:meses,
+labels:['Jan','Fev','Mar','Abr','Mai','Jun'],
 datasets:[
-{
-label:"Entradas",
-data:entradas,
-backgroundColor:"#10b981"
-},
-{
-label:"Saídas",
-data:saidas,
-backgroundColor:"#ef4444"
-}
+{label:'Entradas',data:[320,410,280,350,335,300],backgroundColor:'#6366f1',borderRadius:8},
+{label:'Saídas',data:[210,280,190,220,180,147],backgroundColor:'#f43f5e',borderRadius:8}
 ]
 },
-options:{
-responsive:true
-}
-}
-);
- 
-new Chart(
-document.getElementById("saldoMensal"),
-{
-type:"line",
-data:{
-labels:meses,
-datasets:[
-{
-label:"Saldo",
-data:saldo,
-borderColor:"#3b82f6",
-backgroundColor:"#3b82f6",
-fill:false,
-tension:0.4
-}
-]
-}
-}
-);
- 
-new Chart(
-document.getElementById("economia"),
-{
-type:"doughnut",
-data:{
-labels:["Economizado","Gasto"],
-datasets:[
-{
-data:[38.49,61.51],
-backgroundColor:[
-"#10b981",
-"#ef4444"
-]
-}
-]
-}
-}
-);
- 
+options:{plugins:{legend:{position:'bottom'}},scales:{y:{grid:{display:false}}}}
+});
 </script>
- 
 </body>
 </html>
